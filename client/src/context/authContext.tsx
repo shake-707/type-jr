@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { loginUser } from '../services/auth/login';
-import { verifyToken } from '../services/auth/verify-token';
+import { verifyToken } from '../services/auth/verifyToken';
 
 type User = {
   id: string;

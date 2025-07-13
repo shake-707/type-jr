@@ -3,6 +3,7 @@ import Register from './pages/register';
 
 import Home from './pages/home';
 import Account from './pages/account';
+
 import type { ReactNode } from 'react';
 
 import {
