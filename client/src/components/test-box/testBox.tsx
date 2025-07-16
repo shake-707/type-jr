@@ -1,6 +1,7 @@
 import { WordContainer } from './wordContainer';
 import { getWords } from '../../services/fetchWords';
 import { useEffect, useState, useRef } from 'react';
+import { handleInput } from '../../utils/handleKeyInputs';
 
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 
@@ -18,7 +19,6 @@ export const TestBox = () => {
       try {
         const words = await getWords();
         setWordsApi(words);
-        console.log('words from api', words);
       } catch (err) {
         console.error('error fetching words ', err);
       }
@@ -32,9 +32,7 @@ export const TestBox = () => {
       const initiallizeLetterState = wordsApi.map((word) => {
         return Array(word.length).fill('unchecked');
       });
-      console.log('words from state', wordsApi);
       setLetterStates(initiallizeLetterState);
-      console.log('my initialized state', letterStates);
     }
   }, [wordsApi]);
 
@@ -59,69 +57,18 @@ export const TestBox = () => {
 
   useEffect(() => {
     if (wordsApi.length === 0) return;
-    console.log('my letter state:', letterStates);
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      console.log('previous word length: ', prevWordLength);
-      const key = e.key;
-
-      const expectedValue = wordsApi[currentWordIndex]?.[currentLetterIndex];
-      console.log('expectedValue: ', expectedValue);
-      console.log('key pressed: ', key);
-
-      setLetterStates((prev) =>
-        prev.map((wordStateArr, wordIdx) =>
-          wordIdx === currentWordIndex
-            ? wordStateArr.map((letterState, letterIdx) =>
-                letterIdx === currentLetterIndex
-                  ? expectedValue === key
-                    ? 'correct'
-                    : 'incorrect'
-                  : letterState
-              )
-            : wordStateArr
-        )
+      const inputHandler = handleInput(
+        e,
+        letterStates,
+        wordsApi,
+        currentWordIndex,
+        currentLetterIndex
       );
-
-      if (e.key === ' ') {
-        e.preventDefault();
-        setPrevWordLength((prev) => wordsApi[currentWordIndex]?.length || 0);
-        setCurrentWordIndex((prev) => prev + 1);
-        setCurrentLetterIndex((prev) => prev - prev);
-      } else if (e.key === 'Backspace') {
-        if (currentLetterIndex === 0 && currentWordIndex === 0) {
-          console.log('inside top condition');
-          setCurrentWordIndex((prev) => prev);
-          setCurrentLetterIndex((prev) => prev);
-          return;
-        }
-        console.log('current letter index', currentLetterIndex);
-        console.log('current word index', currentWordIndex);
-        if (currentLetterIndex === 0) {
-          console.log('prev word length before: ', prevWordLength);
-          setPrevWordLength(
-            (prev) => (prev = wordsApi[currentWordIndex - 1]?.length || 0)
-          );
-          const prevv = wordsApi[currentWordIndex - 1].length;
-          console.log('prevvy: ', prevv);
-          console.log('prev word length after', prevWordLength);
-          setCurrentWordIndex((prev) => prev - 1);
-          setCurrentLetterIndex((prev) => prevv - 1);
-        } else {
-          setCurrentLetterIndex((prev) => prev - 1);
-        }
-
-        console.log('key press', e.key);
-      } else {
-        console.log('key press', e.key);
-        if (currentLetterIndex + 1 === wordsApi[currentWordIndex].length) {
-          console.log('end of word');
-          return;
-        }
-        setCurrentLetterIndex((prev) => prev + 1);
-        console.log('current letter index: ', currentLetterIndex);
-        console.log('current word index: ', currentWordIndex);
-      }
+      setCurrentLetterIndex(inputHandler.charIndex);
+      setCurrentWordIndex(inputHandler.wordIndex);
+      setLetterStates(inputHandler.changeLetterState);
     };
 
     window.addEventListener('keydown', handleKeyUp);
@@ -130,11 +77,6 @@ export const TestBox = () => {
     };
   }, [letterStates, currentLetterIndex, currentWordIndex]);
 
-  // useEffect(() => {
-  //   containerRef.current?.focus();
-  // });
-
-  //const wordsFromDb: string[] = ['Hello', 'World'];
   return (
     <div
       ref={containerRef}
