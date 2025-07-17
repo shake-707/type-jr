@@ -67,6 +67,7 @@ export const handleInput = (
           )
         : wordState
     );
+    return { wordIndex, charIndex, changeLetterState };
   }
 
   if (isCharacter) {
@@ -86,6 +87,7 @@ export const handleInput = (
         : wordArray
     );
     charIndex += 1;
+    return { wordIndex, charIndex, changeLetterState };
   }
 
   return { wordIndex, charIndex, changeLetterState };

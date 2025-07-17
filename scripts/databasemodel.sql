@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS test_results(
     correct_chars_typed INT NOT NULL,
     test_mode INT NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (test_mode) REFERENCES test_modes(id)
+    FOREIGN KEY (test_mode) REFERENCES test_categories(id)
 );
 
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS text_bank(
 
 CREATE INDEX index_text_option ON text_bank(text_option);
 
-INSERT INTO test_modes (text_mode, time_seconds, word_count, quote_length, label) VALUES
+INSERT INTO test_categories (text_mode, time_seconds, word_count, quote_length, label) VALUES
 ('count', NULL, 25, NULL, '25 word count'),
 ('count', NULL, 50, NULL, '50 word count'),
 ('count', NULL, 75, NULL, '75 word count'),
