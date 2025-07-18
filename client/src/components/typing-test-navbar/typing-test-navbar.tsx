@@ -45,7 +45,11 @@ export const TypeTestNavbar = ({
           <button
             key={cat.category}
             onClick={() => {
+              const defaultOption = cat.options[0];
+
               setActiveCategory(cat.category);
+              setActiveOption(defaultOption.length);
+              onOptionSelect(cat.category, defaultOption);
             }}
             className={`px-4 py-2 rounded-md text-sm mr-3 font-medium ${
               activeCategory === cat.category

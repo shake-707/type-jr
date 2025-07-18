@@ -5,14 +5,15 @@ export const handleInput = (
   letterState: letterState[][],
   stateTestWords: string[],
   stateWordIndex: number,
-  stateLetterIndex: number
+  stateLetterIndex: number,
+  extraChars: string[]
 ) => {
   const key = e.key;
   let wordIndex = stateWordIndex;
   let charIndex = stateLetterIndex;
   const testWords = stateTestWords;
   let changeLetterState = letterState;
-
+  let extras = extraChars;
   const nonCharacters = [
     'Shift',
     'Control',
@@ -46,12 +47,13 @@ export const handleInput = (
 
     wordIndex += 1;
     charIndex = 0;
-    return { wordIndex, charIndex, changeLetterState };
+    return { wordIndex, charIndex, changeLetterState, extras };
   }
 
   if (isBackSpace) {
-    if (wordIndex === 0 && charIndex === 0)
-      return { wordIndex, charIndex, changeLetterState };
+    if (wordIndex === 0 && charIndex === 0) {
+      return { wordIndex, charIndex, changeLetterState, extras };
+    }
 
     if (charIndex === 0) {
       wordIndex -= 1;
@@ -67,12 +69,15 @@ export const handleInput = (
           )
         : wordState
     );
-    return { wordIndex, charIndex, changeLetterState };
+    return { wordIndex, charIndex, changeLetterState, extras };
   }
 
   if (isCharacter) {
     if (charIndex >= testWords[wordIndex].length) {
-      return { wordIndex, charIndex, changeLetterState };
+      extras = extras.map((extraStr, extraIndex) => 
+        extraIndex === wordIndex ? extraStr + key : extraStr
+    )
+      return { wordIndex, charIndex, changeLetterState, extras };
     }
 
     changeLetterState = changeLetterState.map((wordArray, wIndex) =>
@@ -87,8 +92,8 @@ export const handleInput = (
         : wordArray
     );
     charIndex += 1;
-    return { wordIndex, charIndex, changeLetterState };
+    return { wordIndex, charIndex, changeLetterState, extras };
   }
 
-  return { wordIndex, charIndex, changeLetterState };
+  return { wordIndex, charIndex, changeLetterState, extras };
 };

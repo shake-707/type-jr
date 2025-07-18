@@ -6,6 +6,7 @@ type wordContainerProps = {
   wordIndex: number;
   letterIndex: number;
   letterStates: letterState[][];
+  extraCharacters: string[];
 };
 
 export const WordContainer = ({
@@ -13,6 +14,7 @@ export const WordContainer = ({
   wordIndex,
   letterIndex,
   letterStates,
+  extraCharacters,
 }: wordContainerProps) => {
   return (
     <div className="h-[90px] w-[85vw] leading-[30px] min-[320px] : overflow-hidden mx-auto">
@@ -23,6 +25,7 @@ export const WordContainer = ({
           isCurrent={wordIndex === index}
           currentLetterIndex={wordIndex === index ? letterIndex : -1}
           letterState={letterStates[index]}
+          extraCharacters={extraCharacters[index]}
         />
       ))}
     </div>
