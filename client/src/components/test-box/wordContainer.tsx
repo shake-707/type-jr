@@ -1,3 +1,4 @@
+// import { Word } from './word';
 import { Word } from './word';
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 

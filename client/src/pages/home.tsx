@@ -1,4 +1,4 @@
-import Navbar from '../components/navbar/navbar';
+import Navbar from '../components/navbar/Navbar';
 import { TestBox } from '../components/test-box/testBox';
 
 const Home = () => {
@@ -6,7 +6,7 @@ const Home = () => {
     <>
       <Navbar />
       <h1 className="text-sage-gray">Home Page From Pages</h1>
-      < TestBox />
+      <TestBox />
     </>
   );
 };

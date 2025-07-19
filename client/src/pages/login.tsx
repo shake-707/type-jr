@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
-import Navbar from '../components/navbar/navbar';
+import Navbar from '../components/navbar/Navbar';
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -9,10 +9,9 @@ const Login = () => {
     password: '',
   });
 
-  // will use when implementing css for ui errors 
+  // will use when implementing css for ui errors
   // const [uiError, setUiError] = useState<string>('');
 
-   
   const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -34,7 +33,6 @@ const Login = () => {
       console.log(err);
     }
   };
-
 
   return (
     <>

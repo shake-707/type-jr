@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 import { useContext } from 'react';
 import { useEffect } from 'react';
-import Navbar from '../components/navbar/navbar';
+import Navbar from '../components/navbar/Navbar';
 
 const Account = () => {
   const navigate = useNavigate();

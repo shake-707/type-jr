@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
-import Navbar from '../components/navbar/navbar';
+import Navbar from '../components/navbar/Navbar';
 import { registerUser } from '../services/auth/register';
 
 const Register = () => {

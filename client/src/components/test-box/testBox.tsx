@@ -3,9 +3,11 @@ import { getWords } from '../../services/fetchWords';
 import { useEffect, useState, useRef } from 'react';
 import { handleInput } from '../../utils/handleKeyInputs';
 import { fetchTestCategories } from '../../services/fetchTestCategories';
-import { TypeTestNavbar } from '../typing-test-navbar/typing-test-navbar';
+import { TypeTestNavbar } from '../typing-test-navbar/TypingTestNavbar';
 import { calculateTestResults } from '../../utils/handleTestResults';
-import { ResultsScreen } from './results-screen';
+import { ResultsScreen } from './ResultScreen';
+import { incrementLines } from '../../utils/incrementTextLine';
+
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 type categories = 'count' | 'time';
 type gameState = 'start game' | 'in progress' | 'ended';
@@ -31,9 +33,11 @@ type resultdata = {
 export const TestBox = () => {
   // what is needed before game start
   const [wordsApi, setWordsApi] = useState<string[]>([]);
+  const [testCategories, setTestCategories] = useState<categorySet[]>();
   const containerRef = useRef<HTMLDivElement>(null);
   const [timeStart, setTimeState] = useState<number>(30);
   const [defaultWordCount, setDefaultWordCount] = useState<number>(25);
+
   //  -- when switching category during test reset needed
   const [category, setCategory] = useState<categories>('time');
 
@@ -44,8 +48,6 @@ export const TestBox = () => {
   const [letterStates, setLetterStates] = useState<letterState[][]>([]);
   const [timeLeft, setTimeLeft] = useState<number>(timeStart);
   const [wordCount, setWordCount] = useState<number>(0);
-  //const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [gameEnd, setGameEnd] = useState<boolean>(false);
   const [results, setResults] = useState<resultdata>({
     wpm: 0,
     accurary: 0,
@@ -58,29 +60,24 @@ export const TestBox = () => {
   const [resultsLabel, setResultsLabel] = useState<string>('');
   const [extraChar, setExtraChar] = useState<string[]>(['']);
 
-  // for increments lines as typing
-  useEffect(() => {
-    const currentWordDiv = document.querySelector<HTMLDivElement>('.current');
-    const wordsContainerDiv =
-      document.querySelector<HTMLDivElement>('#words-container');
-
-    if (!currentWordDiv || !containerRef.current || !wordsContainerDiv) return;
-
-    const containerTop = containerRef.current.getBoundingClientRect().top;
-    const wordTop = currentWordDiv.getBoundingClientRect().top;
-    const relativeTop = wordTop - containerTop;
-
-    const lineHeight = 30;
-    const currentLine = Math.floor(relativeTop / lineHeight);
-
-    if (currentLine >= 4) {
-      const currentMargin =
-        parseFloat(wordsContainerDiv.style.marginTop || '0') || 0;
-      const newMargin = currentMargin - lineHeight;
-
-      wordsContainerDiv.style.marginTop = `${newMargin}px`;
+  // callback function from test nav bar to sets test options
+  const handleOptionSelect = (
+    category: categories,
+    option: { length: number; label: string }
+  ) => {
+    if (category === 'count') {
+      setCategory('count');
+      setDefaultWordCount(option.length);
+      setResultsLabel(option.label);
+    } else if (category === 'time') {
+      setCategory('time');
+      setTimeLeft(option.length);
+      setResultsLabel(option.label);
     }
-  }, [currentWordIndex]);
+    resetGameState(option.length);
+    setGameState('start game');
+    containerRef.current?.focus();
+  };
 
   const resetGameState = (newTime?: number) => {
     if (wordsApi.length > 0) {
@@ -89,91 +86,26 @@ export const TestBox = () => {
       });
       const initiallizeExtraCharState = Array(wordsApi.length).fill('');
 
+      // reseting words container tops
+      const container = document.getElementById('words-container');
+      const wordTopDiv = document.querySelector<HTMLDivElement>('.current');
+
+      if (container && wordTopDiv) {
+        container.style.marginTop = '0px';
+        wordTopDiv.style.marginTop = '0px';
+      }
+
       setCurrentLetterIndex(0);
       setCurrentWordIndex(0);
       setLetterStates(initiallizeLetterState);
       setExtraChar(initiallizeExtraCharState);
       setTimeLeft(newTime || timeStart);
       setWordCount(0);
-      //setIsTyping(false);
-      setGameEnd(false);
       setGameState('start game');
-      console.log('reset game state');
     }
   };
 
-  // callback function from test nav bar to sets test options
-  const handleOptionSelect = (
-    category: categories,
-    option: { length: number; label: string }
-  ) => {
-    if (category === 'count') {
-      setCategory('count');
-      console.log('category', category);
-      setDefaultWordCount(option.length);
-      setResultsLabel(option.label);
-    } else if (category === 'time') {
-      setCategory('time');
-      console.log('category', category);
-      setTimeLeft(option.length);
-      console.log('you are being called repeatedly');
-      setResultsLabel(option.label);
-    }
-    resetGameState(option.length);
-    setGameState('start game');
-    containerRef.current?.focus();
-  };
-  const [testCategories, setTestCategories] = useState<categorySet[]>();
-
-  //  starts test and also calculates resuls on end of test
-  useEffect(() => {
-    let shouldEnd = false;
-    if (category === 'time') {
-      shouldEnd = timeLeft <= 0;
-    } else if (category === 'count') {
-      console.log('insidee  this check', defaultWordCount);
-      shouldEnd = wordCount >= defaultWordCount;
-    }
-    if (shouldEnd && gameState === 'in progress') {
-      const finalLetterState = letterStates;
-      console.log('final letter state', finalLetterState);
-      const {
-        wpm,
-        accuracy,
-        correctCharacters,
-        incorrectCharacters,
-        correctWords,
-        incorrectWords,
-      } = calculateTestResults(
-        finalLetterState,
-        Math.abs(timeStart - timeLeft)
-      );
-
-      setResults({
-        wpm: wpm,
-        accurary: accuracy,
-        correctCharacters: correctCharacters,
-        incorrectCharacters: incorrectCharacters,
-        correctWords: correctWords,
-        incorrectWords: incorrectWords,
-        testLabel: resultsLabel,
-      });
-
-      setGameState('ended');
-
-      console.log(`wpm: ${wpm} and accuracy is ${accuracy}%`);
-    }
-    if (gameState === 'start game' || gameState === 'ended' || shouldEnd)
-      return;
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [gameState, timeLeft]);
-
-  // getting words from backend
+  // getting words and test categories from backend
   useEffect(() => {
     const fetchWords = async () => {
       try {
@@ -211,19 +143,66 @@ export const TestBox = () => {
     }
   }, [wordsApi]);
 
+  // for incrementing text line as typing
+  useEffect(() => {
+    const currentWordDiv = document.querySelector<HTMLDivElement>('.current');
+    const wordsContainerDiv =
+      document.querySelector<HTMLDivElement>('#words-container');
+    if (!currentWordDiv || !containerRef.current || !wordsContainerDiv) return;
+
+    incrementLines(currentWordDiv, wordsContainerDiv, containerRef.current);
+  }, [currentWordIndex]);
+
+  //  starts test and also calculates resuls on end of test
+  useEffect(() => {
+    let shouldEnd = false;
+    if (category === 'time') {
+      shouldEnd = timeLeft <= 0;
+    } else if (category === 'count') {
+      //console.log('insidee  this check', defaultWordCount);
+      shouldEnd = wordCount >= defaultWordCount;
+    }
+    if (shouldEnd && gameState === 'in progress') {
+      const finalLetterState = letterStates;
+      //console.log('final letter state', finalLetterState);
+      const {
+        wpm,
+        accuracy,
+        correctCharacters,
+        incorrectCharacters,
+        correctWords,
+        incorrectWords,
+      } = calculateTestResults(
+        finalLetterState,
+        Math.abs(timeStart - timeLeft)
+      );
+
+      setResults({
+        wpm: wpm,
+        accurary: accuracy,
+        correctCharacters: correctCharacters,
+        incorrectCharacters: incorrectCharacters,
+        correctWords: correctWords,
+        incorrectWords: incorrectWords,
+        testLabel: resultsLabel,
+      });
+      setGameState('ended');
+
+    }
+    if (gameState === 'start game' || gameState === 'ended' || shouldEnd)
+      return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [gameState, timeLeft]);
+
   // handle key inputs and checks if correct/incorrect input
   useEffect(() => {
     if (wordsApi.length === 0) return;
     if (gameState === 'ended') return;
-
-    // if (timeLeft <= 0 && category === 'time') {
-    //   setIsTyping(false);
-    //   return;
-    // }
-    // if (wordCount === defaultWordCount) {
-    //   setIsTyping(false);
-    //   return;
-    // }
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (gameState === 'start game') {
@@ -256,69 +235,70 @@ export const TestBox = () => {
     extraChar,
     gameState,
   ]);
-  useEffect(() => {
-    console.log('⏱️ timeStart changed:', timeStart);
-  }, [timeStart]);
 
-  useEffect(() => {
-    console.log('🔤 defaultWordCount changed:', defaultWordCount);
-  }, [defaultWordCount]);
+  // useEffect(() => {
+  //   console.log('⏱️ timeStart changed:', timeStart);
+  // }, [timeStart]);
 
-  useEffect(() => {
-    console.log('📦 wordsApi changed:', wordsApi);
-  }, [wordsApi]);
+  // useEffect(() => {
+  //   console.log('🔤 defaultWordCount changed:', defaultWordCount);
+  // }, [defaultWordCount]);
 
-  useEffect(() => {
-    console.log('🎮 gameState changed:', gameState);
-  }, [gameState]);
+  // useEffect(() => {
+  //   console.log('📦 wordsApi changed:', wordsApi);
+  // }, [wordsApi]);
 
-  useEffect(() => {
-    console.log('⌨️ currentWordIndex changed:', currentWordIndex);
-  }, [currentWordIndex]);
+  // useEffect(() => {
+  //   console.log('🎮 gameState changed:', gameState);
+  // }, [gameState]);
 
-  useEffect(() => {
-    console.log('🔡 currentLetterIndex changed:', currentLetterIndex);
-  }, [currentLetterIndex]);
+  // useEffect(() => {
+  //   console.log('⌨️ currentWordIndex changed:', currentWordIndex);
+  // }, [currentWordIndex]);
 
-  useEffect(() => {
-    console.log('🧩 letterStates changed:', letterStates);
-  }, [letterStates]);
+  // useEffect(() => {
+  //   console.log('🔡 currentLetterIndex changed:', currentLetterIndex);
+  // }, [currentLetterIndex]);
 
-  useEffect(() => {
-    console.log('⏳ timeLeft changed:', timeLeft);
-  }, [timeLeft]);
+  // useEffect(() => {
+  //   console.log('🧩 letterStates changed:', letterStates);
+  // }, [letterStates]);
 
-  useEffect(() => {
-    console.log('📈 wordCount changed:', wordCount);
-  }, [wordCount]);
+  // useEffect(() => {
+  //   console.log('⏳ timeLeft changed:', timeLeft);
+  // }, [timeLeft]);
+
+  // useEffect(() => {
+  //   console.log('📈 wordCount changed:', wordCount);
+  // }, [wordCount]);
 
   // useEffect(() => {
   //   console.log('⌨️ isTyping changed:', isTyping);
   // }, [isTyping]);
 
-  useEffect(() => {
-    console.log('🏁 gameEnd changed:', gameEnd);
-  }, [gameEnd]);
+  // useEffect(() => {
+  //   console.log('🏁 gameEnd changed:', gameEnd);
+  // }, [gameEnd]);
 
-  useEffect(() => {
-    console.log('📊 results changed:', results);
-  }, [results]);
+  // useEffect(() => {
+  //   console.log('📊 results changed:', results);
+  // }, [results]);
 
-  useEffect(() => {
-    console.log('🏷️ resultsLabel changed:', resultsLabel);
-  }, [resultsLabel]);
+  // useEffect(() => {
+  //   console.log('🏷️ resultsLabel changed:', resultsLabel);
+  // }, [resultsLabel]);
 
-  useEffect(() => {
-    console.log('✏️ extraChar changed:', extraChar);
-  }, [extraChar]);
+  // useEffect(() => {
+  //   console.log('✏️ extraChar changed:', extraChar);
+  // }, [extraChar]);
 
-  useEffect(() => {
-    console.log('📂 testCategories changed:', testCategories);
-  }, [testCategories]);
+  // useEffect(() => {
+  //   console.log('📂 testCategories changed:', testCategories);
+  // }, [testCategories]);
 
-  useEffect(() => {
-    console.log('📘 category changed:', category);
-  }, [category]);
+  // useEffect(() => {
+  //   console.log('📘 category changed:', category);
+  // }, [category]);
 
   return (
     <div>

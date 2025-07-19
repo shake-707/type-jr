@@ -1,8 +1,8 @@
-import Login from './pages/login';
-import Register from './pages/register';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-import Home from './pages/home';
-import Account from './pages/account';
+import Home from './pages/Home';
+import Account from './pages/Account';
 
 import type { ReactNode } from 'react';
 
