@@ -15,12 +15,13 @@ export const Word = ({
   letterState,
   extraCharacters,
 }: wordProp) => {
+  const hasExtras = (extraCharacters ?? '').length > 0;
+  const endOfWord = currentLetterIndex >= wordInput.length;
   return (
     <div className={`inline-block mr-1 ${isCurrent ? 'current' : ''}`}>
       {wordInput.split('').map((char, charIndex) => {
         const isCursor = isCurrent && charIndex === currentLetterIndex;
         const state = letterState?.[charIndex] ?? 'unchecked';
-        const finalCharIndex = wordInput.length - 1 === charIndex;
 
         let spanClass = 'mr-[2px] ';
 
@@ -44,30 +45,24 @@ export const Word = ({
           </span>
         );
       })}
-      {isCurrent && extraCharacters.length === 0 && wordInput.length <= currentLetterIndex && (
-        <span
-          key={extraCharacters.length - 1}
-          className="border-r-2 border-white"
-        ></span>
+      {!hasExtras && isCurrent && endOfWord && (
+        <span key="-1" className="border-r-2 border-white"></span>
       )}
 
-      {isCurrent && extraCharacters !== '' && (
-        <>
-          {extraCharacters.split('').map((xChar, xIndex) => {
-            const isCursor = xIndex === extraCharacters.length - 1;
-            let spanClass = 'mr-[2px] text-red-400 ';
-            if (isCursor) {
-              spanClass += 'border-r-2 border-white';
-            }
+      {hasExtras &&
+        extraCharacters.split('').map((xChar, xIndex) => {
+          const isCursor = xIndex === extraCharacters.length - 1;
+          let spanClass = 'mr-[2px] text-red-400 ';
+          if (isCursor && isCurrent) {
+            spanClass += 'border-r-2 border-white';
+          }
 
-            return (
-              <span key={`extra-${xIndex}`} className={spanClass}>
-                {xChar}
-              </span>
-            );
-          })}
-        </>
-      )}
+          return (
+            <span key={`extra-${xIndex}`} className={spanClass}>
+              {xChar}
+            </span>
+          );
+        })}
     </div>
   );
 };

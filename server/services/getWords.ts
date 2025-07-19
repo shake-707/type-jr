@@ -9,7 +9,7 @@ export const getWordsDB = async () => {
     const sql = `SELECT word 
   FROM words 
   ORDER BY RANDOM() 
-  LIMIT 50`;
+  LIMIT 150`;
 
     const words = await db.many(sql);
     return words;

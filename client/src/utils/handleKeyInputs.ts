@@ -51,6 +51,13 @@ export const handleInput = (
   }
 
   if (isBackSpace) {
+    if ((extraChars[wordIndex] ?? '').length > 0) {
+      extras = extras.map((xString, xIndex) =>
+        xIndex === wordIndex ? xString.slice(0, xString.length - 1) : xString
+      );
+      return { wordIndex, charIndex, changeLetterState, extras };
+    }
+
     if (wordIndex === 0 && charIndex === 0) {
       return { wordIndex, charIndex, changeLetterState, extras };
     }
@@ -74,9 +81,9 @@ export const handleInput = (
 
   if (isCharacter) {
     if (charIndex >= testWords[wordIndex].length) {
-      extras = extras.map((extraStr, extraIndex) => 
+      extras = extras.map((extraStr, extraIndex) =>
         extraIndex === wordIndex ? extraStr + key : extraStr
-    )
+      );
       return { wordIndex, charIndex, changeLetterState, extras };
     }
 
