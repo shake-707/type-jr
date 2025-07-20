@@ -1,12 +1,14 @@
-import { WordContainer } from './wordContainer';
+import { WordContainer } from './WordContainer';
 import { getWords } from '../../services/fetchWords';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import { handleInput } from '../../utils/handleKeyInputs';
 import { fetchTestCategories } from '../../services/fetchTestCategories';
 import { TypeTestNavbar } from '../typing-test-navbar/TypingTestNavbar';
 import { calculateTestResults } from '../../utils/handleTestResults';
 import { ResultsScreen } from './ResultScreen';
 import { incrementLines } from '../../utils/incrementTextLine';
+import { AuthContext } from '../../context/authContext';
+import { sendTestResult } from '../../services/sendTestResult';
 
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 type categories = 'count' | 'time';
@@ -28,15 +30,29 @@ type resultdata = {
   correctWords: number;
   incorrectWords: number;
   testLabel: string;
+  userId?: number;
+};
+
+type User = {
+  id: string;
+  user_name: string;
+  email: string;
 };
 
 export const TestBox = () => {
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error('couldnt get auth context');
+  }
+
   // what is needed before game start
   const [wordsApi, setWordsApi] = useState<string[]>([]);
   const [testCategories, setTestCategories] = useState<categorySet[]>();
   const containerRef = useRef<HTMLDivElement>(null);
   const [timeStart, setTimeState] = useState<number>(30);
   const [defaultWordCount, setDefaultWordCount] = useState<number>(25);
+  const [resultsLabel, setResultsLabel] = useState<string>('30 second timer');
 
   //  -- when switching category during test reset needed
   const [category, setCategory] = useState<categories>('time');
@@ -57,8 +73,15 @@ export const TestBox = () => {
     incorrectWords: 0,
     testLabel: '',
   });
-  const [resultsLabel, setResultsLabel] = useState<string>('');
+
   const [extraChar, setExtraChar] = useState<string[]>(['']);
+
+  const { currentUser, loading } = authContext;
+  useEffect(() => {
+    if (!loading && !currentUser) {
+      console.log('not logged in');
+    }
+  }, [loading, currentUser]);
 
   // callback function from test nav bar to sets test options
   const handleOptionSelect = (
@@ -186,8 +209,23 @@ export const TestBox = () => {
         incorrectWords: incorrectWords,
         testLabel: resultsLabel,
       });
-      setGameState('ended');
 
+      if (currentUser) {
+        console.log(currentUser);
+        sendTestResult({
+          wpm: wpm,
+          accurary: accuracy,
+          correctCharacters: correctCharacters,
+          incorrectCharacters: incorrectCharacters,
+          correctWords: correctWords,
+          incorrectWords: incorrectWords,
+          testLabel: resultsLabel,
+          user_name: currentUser.user_name,
+        });
+      } else {
+        console.log('couldnt get current user');
+      }
+      setGameState('ended');
     }
     if (gameState === 'start game' || gameState === 'ended' || shouldEnd)
       return;
@@ -236,69 +274,6 @@ export const TestBox = () => {
     gameState,
   ]);
 
-  // useEffect(() => {
-  //   console.log('⏱️ timeStart changed:', timeStart);
-  // }, [timeStart]);
-
-  // useEffect(() => {
-  //   console.log('🔤 defaultWordCount changed:', defaultWordCount);
-  // }, [defaultWordCount]);
-
-  // useEffect(() => {
-  //   console.log('📦 wordsApi changed:', wordsApi);
-  // }, [wordsApi]);
-
-  // useEffect(() => {
-  //   console.log('🎮 gameState changed:', gameState);
-  // }, [gameState]);
-
-  // useEffect(() => {
-  //   console.log('⌨️ currentWordIndex changed:', currentWordIndex);
-  // }, [currentWordIndex]);
-
-  // useEffect(() => {
-  //   console.log('🔡 currentLetterIndex changed:', currentLetterIndex);
-  // }, [currentLetterIndex]);
-
-  // useEffect(() => {
-  //   console.log('🧩 letterStates changed:', letterStates);
-  // }, [letterStates]);
-
-  // useEffect(() => {
-  //   console.log('⏳ timeLeft changed:', timeLeft);
-  // }, [timeLeft]);
-
-  // useEffect(() => {
-  //   console.log('📈 wordCount changed:', wordCount);
-  // }, [wordCount]);
-
-  // useEffect(() => {
-  //   console.log('⌨️ isTyping changed:', isTyping);
-  // }, [isTyping]);
-
-  // useEffect(() => {
-  //   console.log('🏁 gameEnd changed:', gameEnd);
-  // }, [gameEnd]);
-
-  // useEffect(() => {
-  //   console.log('📊 results changed:', results);
-  // }, [results]);
-
-  // useEffect(() => {
-  //   console.log('🏷️ resultsLabel changed:', resultsLabel);
-  // }, [resultsLabel]);
-
-  // useEffect(() => {
-  //   console.log('✏️ extraChar changed:', extraChar);
-  // }, [extraChar]);
-
-  // useEffect(() => {
-  //   console.log('📂 testCategories changed:', testCategories);
-  // }, [testCategories]);
-
-  // useEffect(() => {
-  //   console.log('📘 category changed:', category);
-  // }, [category]);
 
   return (
     <div>

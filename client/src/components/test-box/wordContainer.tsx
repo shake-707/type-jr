@@ -1,5 +1,5 @@
 // import { Word } from './word';
-import { Word } from './word';
+import { Word } from './Word';
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 
 type wordContainerProps = {

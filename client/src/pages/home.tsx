@@ -1,5 +1,5 @@
 import Navbar from '../components/navbar/Navbar';
-import { TestBox } from '../components/test-box/testBox';
+import { TestBox } from '../components/test-box/TestBox';
 
 const Home = () => {
   return (
