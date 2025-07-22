@@ -11,7 +11,7 @@ export const registerUser = async (inputs: registerInputs): Promise<void> => {
     const response = await axios.post('api/register', inputs);
     console.log('data from registering user', response.data);
   } catch (err) {
-    alert('error registering user');
+    //alert('error registering user');
     console.log('error objust from registerUser', err);
     throw err;
   }

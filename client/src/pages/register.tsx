@@ -3,6 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 import Navbar from '../components/navbar/Navbar';
 import { registerUser } from '../services/auth/register';
+import { Alert } from '../components/alert/Alert';
+import type { AlertProp } from '../components/alert/Alert';
+
+let alertData: AlertProp = {
+  alertType: 'success',
+  message: '',
+};
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -12,6 +19,16 @@ const Register = () => {
   });
 
   // const [err, setErr] = useState<string>('');
+  const [showAlert, setAlert] = useState<boolean>(false);
+
+  const handleError = (messagge: string) => {
+    alertData.alertType = 'error';
+    alertData.message = messagge;
+    setAlert(true);
+    setTimeout(() => {
+      setAlert(false);
+    }, 1000);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -23,6 +40,16 @@ const Register = () => {
     e.preventDefault();
 
     try {
+      if (!inputs.email.includes('@')) {
+        handleError('invalid email');
+        return;
+      }
+
+      if (inputs.password.length < 7) {
+        handleError('password too short');
+        return;
+      }
+
       await registerUser(inputs);
       if (!authContext) {
         console.error('could get auth context');
@@ -44,6 +71,9 @@ const Register = () => {
   return (
     <>
       <Navbar />
+      {showAlert && (
+        <Alert alertType={alertData.alertType} message={alertData.message} />
+      )}
       <div className="registration-container text-sage-gray flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1 className="text-center mt-10 font-semibold tracking-tight">
@@ -52,32 +82,74 @@ const Register = () => {
         </div>
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleClick}>
-            <div className="mt-2">
+            <div className="relative mt-6">
               <input
                 type="text"
-                placeholder="username"
+                id="user_name"
                 name="user_name"
+                placeholder=" "
+                value={inputs.user_name}
                 onChange={handleChange}
-                className="block w-full bg-dark-gray  rounded-md px-3 py-1.5 focus-outline-2 sm:text-sm/6"
+                className="peer h-13 block w-full bg-dark-gray  rounded-md px-3 py-3 focus:outline-none focus:ring-2 focus:ring-sage-gray sm:text-sm"
               />
+              <label
+                htmlFor="user_name"
+                className={`
+                absolute left-3 transition-all duration-200 
+                ${inputs.user_name ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
+                peer-focus:top-1 peer-focus:text-sm peer-focus:text-sage-gray
+              `}
+              >
+                username
+              </label>
             </div>
-            <div className="mt-2">
+
+            <div className="relative mt-6">
               <input
-                type="email"
-                placeholder="email"
+                type="text"
+                id="email"
                 name="email"
+                placeholder=" "
+                value={inputs.email}
                 onChange={handleChange}
-                className="block w-full bg-dark-gray rounded-md px-3 py-1.5 focus-outline-2 sm:text-sm/6"
+                className="peer h-13 block w-full bg-dark-gray  rounded-md px-3 py-3 focus:outline-none focus:ring-2 focus:ring-sage-gray sm:text-sm"
               />
+              <label
+                htmlFor="email"
+                className={`
+                absolute left-3 transition-all duration-200 
+                ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
+                peer-focus:top-1 peer-focus:text-sm ${inputs.email.includes('@') ? 'peer-focus:text-sage-gray' : 'peer-focus:text-red-300'}
+              `}
+              >
+                email
+              </label>
             </div>
-            <div className="mt-2 ">
+
+            <div className="relative mt-6">
               <input
                 type="password"
-                placeholder="password"
+                id="password"
                 name="password"
+                placeholder=" "
+                value={inputs.password}
                 onChange={handleChange}
-                className="block w-full bg-dark-gray rounded-md px-3 py-1.5 focus-outline-2 sm:text-sm/6"
+                className="peer h-13 block w-full bg-dark-gray  rounded-md px-3 py-3 focus:outline-none focus:ring-2 focus:ring-sage-gray sm:text-sm"
               />
+              <label
+                htmlFor="password"
+                className={`
+                absolute left-3 transition-all duration-200 
+                ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
+                peer-focus:top-1 peer-focus:text-sm ${inputs.password.length < 7 ? 'peer-focus:text-red-300' : 'peer-focus:text-sage-gray'}
+              `}
+              >
+                password
+              </label>
+            </div>
+
+            <div className="text-xs mt-1 ml-[5px]">
+              password must be at least 7 characters, no spaces
             </div>
 
             <div className="mt-5">

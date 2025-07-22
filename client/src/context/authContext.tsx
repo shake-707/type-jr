@@ -53,8 +53,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       console.log('login worked from services', responseData);
       localStorage.setItem('token', responseData);
     } catch (err) {
-      alert(err);
+      //alert(err);
       console.error(err);
+      throw err;
     }
   };
 

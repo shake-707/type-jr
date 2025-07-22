@@ -17,6 +17,6 @@ export const verifyToken = async () => {
     return response.data;
   } catch (err) {
     console.error(err);
-    alert('this was an error with verifying token');
+    //alert('this was an error with verifying token');
   }
 };

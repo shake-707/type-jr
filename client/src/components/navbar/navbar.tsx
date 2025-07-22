@@ -35,11 +35,6 @@ const Navbar = () => {
       current: false,
     },
     {
-      name: 'about',
-      href: '/',
-      current: false,
-    },
-    {
       name: 'account',
       href: '/account',
       current: false,

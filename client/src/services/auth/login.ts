@@ -11,7 +11,7 @@ export const loginUser = async (inputs: loginInputs): Promise<string> => {
     console.log('data from login', response.data);
     return response.data;
   } catch (err) {
-    alert('error logging in');
+    //alert('error logging in');
     console.error(err);
     throw err;
   }

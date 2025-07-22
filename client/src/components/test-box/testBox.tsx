@@ -274,9 +274,8 @@ export const TestBox = () => {
     gameState,
   ]);
 
-
   return (
-    <div>
+    <div className="relative">
       <div
         ref={containerRef}
         tabIndex={0}
@@ -306,9 +305,17 @@ export const TestBox = () => {
           extraCharacters={extraChar}
         />
       </div>
-      <div>
-        {gameState === 'ended' && <ResultsScreen resultsData={results} />}
-      </div>
+
+      {gameState === 'ended' && (
+     
+          <ResultsScreen
+            resultsData={results}
+            onExit={() => {
+              resetGameState();
+            }}
+          />
+       
+      )}
     </div>
   );
 };
