@@ -9,6 +9,7 @@ import { ResultsScreen } from './ResultScreen';
 import { incrementLines } from '../../utils/incrementTextLine';
 import { AuthContext } from '../../context/authContext';
 import { sendTestResult } from '../../services/sendTestResult';
+import { defaults } from '../../utils/constants';
 
 type letterState = 'correct' | 'incorrect' | 'unchecked';
 type categories = 'count' | 'time';
@@ -50,9 +51,9 @@ export const TestBox = () => {
   const [wordsApi, setWordsApi] = useState<string[]>([]);
   const [testCategories, setTestCategories] = useState<categorySet[]>();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [timeStart, setTimeState] = useState<number>(30);
-  const [defaultWordCount, setDefaultWordCount] = useState<number>(25);
-  const [resultsLabel, setResultsLabel] = useState<string>('30 second timer');
+  const [timeStart, setTimeState] = useState<number>(defaults.timeStart);
+  const [defaultWordCount, setDefaultWordCount] = useState<number>(defaults.countWordCount);
+  const [resultsLabel, setResultsLabel] = useState<string>(defaults.resultLabel);
 
   //  -- when switching category during test reset needed
   const [category, setCategory] = useState<categories>('time');
@@ -134,7 +135,7 @@ export const TestBox = () => {
       try {
         let words: string[] = [];
         if (category === 'time') {
-          words = await getWords({ category: 'time', option: 150 });
+          words = await getWords({ category: 'time', option: defaults.timeWordCount });
         } else if (category === 'count') {
           const wordCount = defaultWordCount;
           words = await getWords({ category: 'count', option: wordCount });

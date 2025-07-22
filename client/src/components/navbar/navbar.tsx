@@ -1,14 +1,5 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import { href } from 'react-router-dom';
+import { Disclosure } from '@headlessui/react';
+
 import { AuthContext } from '../../context/authContext';
 import { useContext, useEffect, useState } from 'react';
 
@@ -16,10 +7,6 @@ type Link = {
   name: string;
   href: string;
 };
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ');
-}
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);

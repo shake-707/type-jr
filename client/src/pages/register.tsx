@@ -18,7 +18,6 @@ const Register = () => {
     password: '',
   });
 
-  // const [err, setErr] = useState<string>('');
   const [showAlert, setAlert] = useState<boolean>(false);
 
   const handleError = (messagge: string) => {
@@ -69,12 +68,12 @@ const Register = () => {
   };
 
   return (
-    <>
+    <div className='min-h-screen'>
       <Navbar />
       {showAlert && (
         <Alert alertType={alertData.alertType} message={alertData.message} />
       )}
-      <div className="registration-container text-sage-gray flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="registration-container text-sage-gray flex min-h-full flex-1 flex-col px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1 className="text-center mt-10 font-semibold tracking-tight">
             Registration
@@ -169,7 +168,7 @@ const Register = () => {
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

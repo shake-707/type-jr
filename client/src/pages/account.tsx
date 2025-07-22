@@ -27,7 +27,7 @@ const Account = () => {
   }
 
   return (
-    <>
+    <div className='min-h-screen'>
       <Navbar />
       <h1 className="text-sage-gray">
         Account Page: Welcome {currentUser?.user_name}
@@ -35,7 +35,7 @@ const Account = () => {
       {currentUser?.user_name && (
         <UserTestResults user_name={currentUser?.user_name} />
       )}
-    </>
+    </div>
   );
 };
 
