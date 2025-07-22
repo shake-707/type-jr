@@ -53,8 +53,8 @@ export const TypeTestNavbar = ({
             }}
             className={`px-4 py-2 rounded-md text-sm mr-3 font-medium ${
               activeCategory === cat.category
-                ? 'bg-dark-gray text-white'
-                : 'text-sage-gray hover:bg-gray-700 hover:text-white'
+                ? 'bg-dark-gray text-bright-gray'
+                : 'text-sage-gray hover:bg-gray-700 hover:text-bright-gray'
             }`}
           >
             {cat.category.toUpperCase()}
@@ -73,8 +73,8 @@ export const TypeTestNavbar = ({
             className={` px-3  py-2 rounded-md mr-3 transition
                 ${
                   activeOption === opt.length
-                    ? 'bg-dark-gray text-white'
-                    : 'text-sage-gray hover:bg-gray-700 hover:text-white'
+                    ? 'bg-dark-gray text-bright-gray'
+                    : 'text-sage-gray hover:bg-gray-700 hover:text-bright-gray'
                 } `}
           >
             {opt.length}

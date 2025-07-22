@@ -3,7 +3,8 @@ import { getWordsDB } from '../services/getWords';
 
 export const getWords = async (request: Request, response: Response) => {
   try {
-    const words = await getWordsDB();
+    const numberWords = Number(request.query.option);
+    const words = await getWordsDB(numberWords);
     response.status(201).send(words);
   } catch (err) {
     console.error(err);

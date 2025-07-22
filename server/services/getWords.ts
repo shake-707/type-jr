@@ -4,14 +4,15 @@ type wordsDb = {
     words: string[];
 }
 
-export const getWordsDB = async () => {
+export const getWordsDB = async (wordAmount : number) => {
   try {
     const sql = `SELECT word 
   FROM words 
   ORDER BY RANDOM() 
-  LIMIT 150`;
-
-    const words = await db.many(sql);
+  LIMIT $1`;
+  
+    const count = wordAmount
+    const words = await db.many(sql, [count]);
     return words;
   } catch (err) {
     console.error('error getting words from db', err);

@@ -118,8 +118,8 @@ const Register = () => {
                 htmlFor="email"
                 className={`
                 absolute left-3 transition-all duration-200 
-                ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
-                peer-focus:top-1 peer-focus:text-sm ${inputs.email.includes('@') ? 'peer-focus:text-sage-gray' : 'peer-focus:text-red-300'}
+                ${inputs.email ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
+                peer-focus:top-1 peer-focus:text-sm ${inputs.email.includes('@') ? 'peer-focus:text-sage-gray' : 'peer-focus:text-incorrect-red'}
               `}
               >
                 email
@@ -141,7 +141,7 @@ const Register = () => {
                 className={`
                 absolute left-3 transition-all duration-200 
                 ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
-                peer-focus:top-1 peer-focus:text-sm ${inputs.password.length < 7 ? 'peer-focus:text-red-300' : 'peer-focus:text-sage-gray'}
+                peer-focus:top-1 peer-focus:text-sm ${inputs.password.length < 7 ? 'peer-focus:text-incorrect-red' : 'peer-focus:text-sage-gray'}
               `}
               >
                 password

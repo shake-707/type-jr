@@ -9,7 +9,7 @@ export const selectTestResults = async (user_name: string) => {
         WHERE tr.user_id = (
         SELECT id FROM users WHERE user_name = $1
         )
-        ORDER BY tr.id ASC`;
+        ORDER BY tr.id DESC`;
 
     const testResults = await db.any(sql, [user_name]);
     return testResults;

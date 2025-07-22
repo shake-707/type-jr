@@ -29,10 +29,10 @@ export const Word = ({
 
         switch (state) {
           case 'correct':
-            spanClass += ' text-green-200 ';
+            spanClass += ' text-bright-gray ';
             break;
           case 'incorrect':
-            spanClass += ' text-red-400 ';
+            spanClass += ' text-incorrect-red ';
             break;
           case 'unchecked':
           default:
@@ -52,7 +52,7 @@ export const Word = ({
       {hasExtras &&
         extraCharacters.split('').map((xChar, xIndex) => {
           const isCursor = xIndex === extraCharacters.length - 1;
-          let spanClass = 'mr-[2px] text-red-400 ';
+          let spanClass = 'mr-[2px] text-incorrect-red ';
           if (isCursor && isCurrent) {
             spanClass += 'border-r-2 border-white';
           }

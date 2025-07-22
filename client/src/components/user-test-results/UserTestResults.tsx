@@ -35,7 +35,7 @@ export const UserTestResults = ({ user_name }: Props) => {
       {testResults?.map((result, index) => (
         <div key={index} className="p-2 border-b">
           <div>WPM: {result.wpm}</div>
-          <div>Accuracy: {result.accuracy}</div>
+          <div>Accuracy: {result.accuracy}%</div>
           <div>Test Type: {result.label}</div>
         </div>
       ))}

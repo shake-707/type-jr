@@ -132,7 +132,14 @@ export const TestBox = () => {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        const words = await getWords();
+        let words: string[] = [];
+        if (category === 'time') {
+          words = await getWords({ category: 'time', option: 150 });
+        } else if (category === 'count') {
+          const wordCount = defaultWordCount;
+          words = await getWords({ category: 'count', option: wordCount });
+        }
+
         setWordsApi(words);
       } catch (err) {
         console.error('error fetching words ', err);
@@ -152,7 +159,7 @@ export const TestBox = () => {
 
     fetchWords();
     fetchCategores();
-  }, []);
+  }, [defaultWordCount, category]);
 
   // inititalizing both char and extra char states for the test
   useEffect(() => {
@@ -289,9 +296,9 @@ export const TestBox = () => {
         )}
         <div>
           {category === 'time' ? (
-            <div className="w-[30px] text-white">{timeLeft}s</div>
+            <div className="w-[30px] text-bright-gray">{timeLeft}s</div>
           ) : (
-            <div className="w-[30px] text-white">
+            <div className="w-[30px] text-bright-gray">
               {wordCount}/{defaultWordCount}
             </div>
           )}
@@ -307,14 +314,12 @@ export const TestBox = () => {
       </div>
 
       {gameState === 'ended' && (
-     
-          <ResultsScreen
-            resultsData={results}
-            onExit={() => {
-              resetGameState();
-            }}
-          />
-       
+        <ResultsScreen
+          resultsData={results}
+          onExit={() => {
+            resetGameState();
+          }}
+        />
       )}
     </div>
   );

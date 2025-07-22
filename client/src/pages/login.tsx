@@ -59,7 +59,9 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      {showAlert && <Alert alertType={alertData.alertType} message={alertData.message} />}
+      {showAlert && (
+        <Alert alertType={alertData.alertType} message={alertData.message} />
+      )}
       <div className="login-container text-sage-gray flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1 className="text-center mt-10 font-semibold tracking-tight">
@@ -90,7 +92,7 @@ const Login = () => {
               </label>
             </div>
 
-             <div className="relative mt-6">
+            <div className="relative mt-6">
               <input
                 type="password"
                 id="password"
@@ -105,34 +107,12 @@ const Login = () => {
                 className={`
                 absolute left-3 transition-all duration-200 
                 ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
-                peer-focus:top-1 peer-focus:text-sm ${inputs.password.length < 7 ? 'peer-focus:text-red-300' : 'peer-focus:text-sage-gray'}
+                peer-focus:top-1 peer-focus:text-sm ${inputs.password.length < 7 ? 'peer-focus:text-incorrect-red' : 'peer-focus:text-sage-gray'}
               `}
               >
                 password
               </label>
             </div>
-
-            {/* <div className="relative mt-6">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder=" "
-                value={inputs.password}
-                onChange={handleChange}
-                className="peer h-13 block w-full bg-dark-gray  rounded-md px-3 py-3 focus:outline-none focus:ring-2 focus:ring-sage-gray sm:text-sm"
-              />
-              <label
-                htmlFor="password"
-                className={`
-                absolute left-3 transition-all duration-200 
-                ${inputs.password ? 'top-1 text-sm text-sage-gray' : 'top-3 text-base text-gray-500'}
-                peer-focus:top-1 peer-focus:text-sm peer-focus:text-sage-gray
-              `}
-              >
-                password
-              </label>
-            </div> */}
 
             <div className="mt-5">
               <button
