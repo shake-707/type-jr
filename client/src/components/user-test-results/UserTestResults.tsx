@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getUserTestResults } from '../../services/fetchUserTestResults';
 
-type Props = {
-  user_name: string;
-};
+type userProp = {
+    user_name:string;
+}
 
 type testResultsProp = {
   wpm: number;
@@ -11,7 +11,7 @@ type testResultsProp = {
   label: string;
 };
 
-export const UserTestResults = ({ user_name }: Props) => {
+export const UserTestResults = ({user_name}: userProp) => {
   const [testResults, setTestResults] = useState<testResultsProp[] | null>(null);
 
   useEffect(() => {

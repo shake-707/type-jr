@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { insertTestResult } from '../services/insertTestResult';
-type resultdata = {
+
+export type resultClientData = {
   wpm: number;
   accurary: number;
   correctCharacters: number;
@@ -13,27 +14,9 @@ type resultdata = {
 
 export const postTestResult = async (request: Request, response: Response) => {
   try {
-    const {
-      wpm,
-      accurary,
-      correctCharacters,
-      incorrectCharacters,
-      correctWords,
-      incorrectWords,
-      testLabel,
-      user_name,
-    }: resultdata = request.body;
+    const resultData: resultClientData = request.body;
 
-    await insertTestResult(
-      wpm,
-      accurary,
-      incorrectCharacters,
-      correctCharacters,
-      incorrectWords,
-      correctWords,
-      testLabel,
-      user_name
-    );
+    await insertTestResult(resultData);
     response.status(201).send('test result insert successful');
   } catch (err) {
     console.error(err);

@@ -1,4 +1,11 @@
-type letterState = 'correct' | 'incorrect' | 'unchecked';
+export type letterState = 'correct' | 'incorrect' | 'unchecked';
+
+export type currentStates = {
+  wordIndex: number;
+  charIndex: number;
+  changeLetterState: letterState[][];
+  extras: string[];
+};
 
 export const handleInput = (
   e: KeyboardEvent,
@@ -7,7 +14,7 @@ export const handleInput = (
   stateWordIndex: number,
   stateLetterIndex: number,
   extraChars: string[]
-) => {
+): currentStates => {
   const key = e.key;
   let wordIndex = stateWordIndex;
   let charIndex = stateLetterIndex;

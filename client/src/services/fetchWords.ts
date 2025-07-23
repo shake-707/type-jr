@@ -1,8 +1,9 @@
 import axios from 'axios';
+import type { categories } from './fetchTestCategories';
 
 
 type categoryProp = {
-  category: 'time' | 'count';
+  category: categories
   option: number;
 };
 

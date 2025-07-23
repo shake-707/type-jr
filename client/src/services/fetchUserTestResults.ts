@@ -1,12 +1,22 @@
 import axios from 'axios';
 
-export const getUserTestResults = async (user_name: string) => {
+export type testResultsData = {
+    total_words_typed: number,
+    correct_words_typed: number,
+    total_chars_typed: number,
+    correct_chars_typed: number,
+    wpm: number,
+    accuracy:number,
+    label: string
+}
+
+
+export const getUserTestResults = async (user_name: string): Promise<testResultsData[]> => {
   try {
-    const testResults = await axios.get('/api/testResults', {
+    const testResults = await axios.get<testResultsData[]>('/api/testResults', {
       params: { user_name },
     });
 
-    console.log(testResults.data);
     return testResults.data;
   } catch (err) {
     console.error(err);

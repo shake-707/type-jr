@@ -1,17 +1,11 @@
 import db from '../../config/db-connection';
 import bcrypt from 'bcrypt';
+import type { newUser } from '../../controllers/auth/registerController';
 
-type User = {
-  user_id: number;
-  user_name: string;
-  email: string;
-};
 
 export const insertUser = async (
-  user_name: string,
-  email: string,
-  password: string
-): Promise<User> => {
+  user:newUser
+): Promise<newUser> => {
   const sql = `
     INSERT INTO users (
         user_name,
@@ -23,16 +17,14 @@ export const insertUser = async (
         RETURNING id, user_name;
     `;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(user.password, 10);
   const now = new Date();
 
-  const values = [user_name, hashedPassword, now, email];
+  const values = [user.user_name, hashedPassword, now, user.email];
 
   try {
-    const { id } = await db.one(sql, values);
-  
-    console.log(`users id: ${id}`);
-    return { user_id: id, user_name, email };
+    await db.one(sql, values);
+    return user;
   } catch (err) {
     console.error(err);
     throw err;

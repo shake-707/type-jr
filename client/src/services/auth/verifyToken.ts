@@ -13,10 +13,10 @@ export const verifyToken = async () => {
         Authorization: `Bearer ${storedToken}`,
       },
     });
-
+   
     return response.data;
   } catch (err) {
     console.error(err);
-    //alert('this was an error with verifying token');
+    throw err;
   }
 };

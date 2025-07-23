@@ -1,12 +1,11 @@
 import db from '../../config/db-connection';
 import bcrypt from 'bcrypt';
 import { get_secret_key } from '../../config/get-environment-variables';
-
+import type { User } from '../../controllers/auth/loginController';
 import { create_token } from '../../utils/createToken';
 
 export const getUser = async (
-  user_name: string,
-  password: string
+  {user_name, password}: User
 ): Promise<string> => {
   try {
     const sql = `SELECT user_name, password, email

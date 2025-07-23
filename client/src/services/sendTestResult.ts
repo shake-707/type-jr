@@ -11,9 +11,9 @@ type resultApiData = {
   user_name: string;
 };
 
-export const sendTestResult = async (results: resultApiData) => {
+export const sendTestResult = async (results: resultApiData): Promise<void> => {
     try {
-        await axios.post('/api/postTestResult', results);
+        await axios.post<resultApiData>('/api/postTestResult', results);
     } catch (err) {
         console.error(err);
     }
