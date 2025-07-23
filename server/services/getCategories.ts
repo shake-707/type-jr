@@ -1,6 +1,6 @@
 import db from '../config/db-connection';
 
-type dbTestCategoriesData = {
+export type dbTestCategoriesData = {
   id: number;
   text_mode: string;
   time_seconds: number | null;

@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-type getWordsResponse = {
-  word: string;
-};
 
 type categoryProp = {
   category: 'time' | 'count';
@@ -14,10 +11,10 @@ export const getWords = async ({
   option,
 }: categoryProp): Promise<string[]> => {
   try {
-    const response = await axios.get<getWordsResponse[]>('/api/getWords', {
+    const response = await axios.get<string[]>('/api/getWords', {
       params: { category, option },
     });
-    return response.data.map((item) => item.word);
+    return response.data
   } catch (err) {
     throw err;
   }

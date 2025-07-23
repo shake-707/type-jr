@@ -9,7 +9,7 @@ export const insertTestResult = async (
   correctWords: number,
   testLabel: string,
   user_name: string
-) => {
+): Promise<void> => {
   try {
     const sql = `INSERT INTO 
     test_results (user_id, 
