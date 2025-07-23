@@ -10,9 +10,9 @@ import { incrementLines } from '../../utils/incrementTextLine';
 import { AuthContext } from '../../context/authContext';
 import { sendTestResult } from '../../services/sendTestResult';
 import { defaults } from '../../utils/constants';
+import type { categories } from '../../services/fetchTestCategories';
+import type { letterState } from '../../utils/handleKeyInputs';
 
-type letterState = 'correct' | 'incorrect' | 'unchecked';
-type categories = 'count' | 'time';
 type gameState = 'start game' | 'in progress' | 'ended';
 
 type categorySet = {
@@ -151,7 +151,6 @@ export const TestBox = () => {
       try {
         const categories = await fetchTestCategories();
         setTestCategories(categories);
-        console.log(categories);
       } catch (err) {
         alert('error');
         console.error('error fetching categories', err);
@@ -190,12 +189,12 @@ export const TestBox = () => {
     if (category === 'time') {
       shouldEnd = timeLeft <= 0;
     } else if (category === 'count') {
-      //console.log('insidee  this check', defaultWordCount);
+    
       shouldEnd = wordCount >= defaultWordCount;
     }
     if (shouldEnd && gameState === 'in progress') {
       const finalLetterState = letterStates;
-      //console.log('final letter state', finalLetterState);
+     
       const {
         wpm,
         accuracy,
@@ -219,7 +218,7 @@ export const TestBox = () => {
       });
 
       if (currentUser) {
-        console.log(currentUser);
+       
         sendTestResult({
           wpm: wpm,
           accurary: accuracy,

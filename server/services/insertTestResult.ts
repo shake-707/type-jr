@@ -1,15 +1,16 @@
 import db from '../config/db-connection';
+import type { resultClientData } from '../controllers/postTestResultController';
 
-export const insertTestResult = async (
-  wpm: number,
-  accurary: number,
-  incorrectCharacters: number,
-  correctCharacters: number,
-  incorrectWords: number,
-  correctWords: number,
-  testLabel: string,
-  user_name: string
-): Promise<void> => {
+export const insertTestResult = async ({
+  wpm,
+  accurary,
+  incorrectCharacters,
+  correctCharacters,
+  incorrectWords,
+  correctWords,
+  testLabel,
+  user_name,
+}: resultClientData): Promise<void> => {
   try {
     const sql = `INSERT INTO 
     test_results (user_id, 
@@ -26,7 +27,7 @@ export const insertTestResult = async (
     (SELECT id FROM test_categories WHERE label = $6),
     $7,$8 
     )`;
-    console.log("label: ",testLabel);
+    //console.log('label: ', testLabel);
 
     const values = [
       user_name,

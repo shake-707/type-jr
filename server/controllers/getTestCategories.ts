@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { getTestCategories } from '../services/getCategories';
 
-type categories = 'count' | 'time';
+export type categories = 'count' | 'time';
 
-type testCategoriesResponseData = {
+export type testCategoriesResponseData = {
   category: categories;
   options: {
     length: number;
@@ -42,7 +42,7 @@ export const testCategoriesConttroller = async (
       }
     }
 
-    console.log('categories from db', dbData);
+    //console.log('categories from db', dbData);
     response.status(201).send(results);
   } catch (err) {
     console.error(err);

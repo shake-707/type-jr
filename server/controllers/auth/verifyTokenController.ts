@@ -9,12 +9,11 @@ export const verifyToken = async (request: Request, response: Response) => {
       response.status(401).send('no token given');
       return;
     }
-    console.log('auth header', authHeader);
 
     const token = authHeader.split(' ')[1];
-    console.log('token: ', token);
+
     const decodeToken = verifyJWT(token);
-    console.log('decoded token', decodeToken);
+
     response.status(200).send(decodeToken);
   } catch (error) {
     response.status(401).json({ valid: false, messsage: 'Invalid token' });

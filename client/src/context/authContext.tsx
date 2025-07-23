@@ -29,7 +29,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         const tokenData = await verifyToken();
 
         if (tokenData) {
-          console.log('received token data', tokenData);
+          
           setCurrentUser(tokenData);
         } else {
           setCurrentUser(null);
@@ -40,7 +40,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         console.error(err);
       }
     };
-    console.log('service import worked!');
+  
     verify();
   }, []);
 
@@ -50,10 +50,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       if (!responseData) {
         console.log('nothing is res data');
       }
-      console.log('login worked from services', responseData);
+      
       localStorage.setItem('token', responseData);
     } catch (err) {
-      //alert(err);
+      
       console.error(err);
       throw err;
     }

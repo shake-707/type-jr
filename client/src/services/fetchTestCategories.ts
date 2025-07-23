@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-type categories = 'count' | 'time';
+export type categories = 'count' | 'time';
 
-type testCategoriesResponseData = {
+export type testCategoriesResponseData = {
   category: categories;
   options: {
     length: number;
@@ -10,7 +10,9 @@ type testCategoriesResponseData = {
   }[];
 };
 
-export const fetchTestCategories = async () => {
+
+
+export const fetchTestCategories = async (): Promise<testCategoriesResponseData[]> => {
   try {
     const response = await axios.get<testCategoriesResponseData[]>(
       '/api/test-categories'
