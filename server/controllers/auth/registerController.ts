@@ -8,22 +8,22 @@ export type newUser = {
 
 export const handleRegister = async (request: Request, response: Response) => {
   try {
-    const user : newUser = request.body;
-   
+    const user: newUser = request.body;
+
     if (user.password.length < 7) {
-      response.status(400).json({ error: 'password too short' });
+      response.status(400).send({ error: 'password too short' });
       return;
     }
 
     if (!user.email.includes('@')) {
-      response.status(400).json({ error: 'Invalid email' });
+      response.status(400).send({ error: 'Invalid email' });
       return;
     }
     const newUser = await insertUser(user);
-    response.status(201).json(newUser);
+    response.status(201).send(newUser);
     return;
-  } catch (error) {
-    console.error('error registering', error);
-    response.status(501).send(error);
+  } catch (err) {
+    console.error('error registering', err);
+    response.status(501).send({ message: 'registration failed', error: err });
   }
 };
