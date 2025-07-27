@@ -14,7 +14,7 @@ export type testCategoriesResponseData = {
 export const testCategoriesConttroller = async (
   request: Request,
   response: Response
-) => {
+): Promise<void> => {
   try {
     const dbData = await getTestCategories();
     const results: testCategoriesResponseData[] = [

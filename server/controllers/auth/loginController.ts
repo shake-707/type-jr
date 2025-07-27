@@ -6,7 +6,7 @@ export type User = {
   password: string;
 };
 
-export const handleLogin = async (request: Request, response: Response) => {
+export const handleLogin = async (request: Request, response: Response): Promise<void> => {
   try {
     const user: User = request.body;
     if (user.password.length < 7) {
